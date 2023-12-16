@@ -1,5 +1,5 @@
 use std::ops::Range;
-use crate::collision_detection::Collider;
+use crate::{collision_detection::Collider, schedule::InGameSet};
 
 use bevy::prelude::*;
 use rand::prelude::*;
@@ -31,7 +31,7 @@ impl Plugin for AsteroidPlugin {
         app.insert_resource(SpawnTimer {
             timer: Timer::from_seconds(SPAWN_TIME_SECONDS, TimerMode::Repeating),
         })  
-        .add_systems(Update, (spawn_asteroid, rotate_asteroids, handle_asteroid_collisions));
+        .add_systems(Update, (spawn_asteroid, rotate_asteroids).in_set(InGameSet::EntityUpdates));
     }
 }
 
@@ -75,15 +75,3 @@ fn rotate_asteroids(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<
     }
 }
 
-fn handle_asteroid_collisions(mut commands: Commands, query: Query<(Entity, &Collider), With<Asteroid>>) {
-    for (entity, collider) in query.iter() {
-        for &collided_entity in collider.colliding_entities.iter() {
-            // Asteroid collided with another asteroid.
-            if query.get(collided_entity).is_ok() {
-                continue;
-            }
-            // Despawn asteroid
-            commands.entity(entity).despawn_recursive();
-        }
-    }
-}

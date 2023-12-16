@@ -6,6 +6,7 @@ mod asteroids;
 mod asset_loader;
 mod collision_detection;
 mod despawn;
+mod schedule;
 
 use asset_loader::AssetLoaderPlugin;
 use asteroids::AsteroidPlugin;
@@ -16,6 +17,7 @@ use debug::DebugPlugin;
 use despawn::DespawnPlugin;
 use movement::MovementPlugin;
 use spaceship::SpaceshipPlugin;
+use schedule::SchedulePlugin;
 
 fn main() {
     App::new()
@@ -34,6 +36,7 @@ fn main() {
             AsteroidPlugin,
             CollisionDetectionPlugin,
             DespawnPlugin,
+            SchedulePlugin,
         ))
         .run();
 }
